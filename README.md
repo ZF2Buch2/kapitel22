@@ -1,5 +1,5 @@
-kapitel22
-=========
+ZF2 Buch - Kapitel 22
+=====================
 
 Hier werden in Kürze die Projektdateien für das Kapitel 22 vom Buch
 "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
