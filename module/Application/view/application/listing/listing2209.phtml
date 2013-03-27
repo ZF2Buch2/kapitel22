@@ -1,0 +1,76 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.9 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.9');
+$this->pageTitle('Listing 22.9');
+?>
+<h3>View-Helper <code>ShowBasket</code> ermöglicht Ausgabe des Warenkorbs</h3>
+<pre>
+&lt;?php
+namespace Shop\View\Helper;
+
+use Shop\Entity\BasketEntityInterface;
+use Shop\Service\BasketServiceInterface;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Model\ViewModel;
+
+class ShowBasket extends AbstractHelper
+{
+    protected $basketService;
+
+    public function __construct(BasketServiceInterface $basketService)
+    {
+        $this->setBasketService($basketService);
+    }
+
+    public function setBasketService(BasketServiceInterface $basketService = null)
+    {
+        $this->basketService = $basketService;
+        return $this;
+    }
+    
+    public function getBasketService()
+    {
+        return $this->basketService;
+    }
+    
+    public function __invoke($type = 'small', $basket = null)
+    {
+        $template = $type == 'small' 
+                  ? 'widget/small-basket' 
+                  : 'widget/full-basket';
+        
+        if (!$basket instanceof BasketEntityInterface) {
+            $basket = $this->getBasketService()->getBasket();
+            $change = true;
+        } else {
+            $change = false;
+        }
+        
+        $vm = new ViewModel(array(
+            'basket' => $basket,
+            'change' => $change,
+        ));
+        $vm->setTemplate($template);
+        
+        return $this->getView()->render($vm);
+    }
+}
+</pre>

@@ -1,0 +1,32 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Comment
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Comment show links list and form view script
+ * 
+ * @package    Comment
+ */
+?>
+<p>
+<em>
+<i class="icon-comment"></i> 
+<a href="<?php echo $this->commentUrl;?>#comments">
+<?php $text = $this->commentCount == 1 ? 'Kommentar' : 'Kommentare'; ?>
+<?php echo $this->commentCount; ?> <?php echo $text; ?></a>
+&nbsp;|&nbsp;
+<i class="icon-pencil"></i> 
+<a href="<?php echo $this->commentUrl;?>#comment-form">
+Kommentar schreiben</a>
+</em>
+</p>

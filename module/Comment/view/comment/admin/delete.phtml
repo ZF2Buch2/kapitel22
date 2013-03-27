@@ -1,0 +1,65 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Comment
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Comment\Entity\CommentEntity;
+
+/**
+ * Comment-Admin delete view script
+ * 
+ * @package    Comment
+ */
+
+$this->headTitle('Kommentar löschen');
+$this->pageTitle('Einen Kommentar löschen');
+
+// set comment entity
+$comment = $this->comment; /* @var $comment CommentEntity */
+
+// set show url
+$url = $comment->getUrl();
+?>
+<table class="table table-data">
+<tbody>
+<tr>
+<th>Datum</th>
+<td><?php echo $this->date($comment->getCdate()); ?></td>
+</tr>
+<tr>
+<th>Url</th>
+<td><a href="<?php echo $url; ?>"><?php echo $url; ?></a></td>
+</tr>
+<tr>
+<th>Status</th>
+<td><?php echo $comment->getStatusName(); ?></td>
+</tr>
+<tr>
+<th>E-Mail-Adresse</th>
+<td><?php echo $comment->getEmail(); ?></td>
+</tr>
+<tr>
+<th>Name</th>
+<td><?php echo $comment->getName(); ?></td>
+</tr>
+<tr>
+<th>Kommentar</th>
+<td><?php echo $comment->getMessage(); ?></td>
+</tr>
+</tbody>
+</table>
+<?php 
+$actionUrl = $this->url('comment-admin/action', array(), array(), true);
+echo $this->showForm($this->form, $actionUrl, 'form-horizontal'); 

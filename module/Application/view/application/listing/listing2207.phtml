@@ -1,0 +1,114 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.7 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.7');
+$this->pageTitle('Listing 22.7');
+?>
+<h3><code>BasketService</code> stellt Zugriff auf Warenkorb bereit</h3>
+<pre>
+&lt;?php
+namespace Shop\Service;
+
+use Shop\Entity\BasketEntityInterface;
+use Shop\Entity\BasketEntity;
+use Shop\Entity\PositionEntity;
+use Zend\Session\Container;
+
+class BasketService implements BasketServiceInterface
+{
+    const NAMESPACE_DEFAULT = 'Basket_Session';
+    
+    protected $session = null;
+    protected $message = null;
+    
+    public function __construct()
+    {
+        $this->session = new Container(self::NAMESPACE_DEFAULT);
+    }
+    
+    public function initBasket()
+    {
+        $this->setBasket(new BasketEntity());
+
+        return $this;
+    }
+
+    public function getBasket()
+    {
+        if (!$this->session->basket) {
+            $this->initBasket();
+        }
+        
+        return $this->session->basket;
+    }
+
+    public function setBasket(BasketEntityInterface $basket)
+    {
+        $this->session->basket = $basket;
+        
+        return $this;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+    
+    public function clearMessage()
+    {
+        $this->message = null;
+    }
+    
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+    
+    public function add($entity)
+    {
+        $position = new PositionEntity();
+        $position->setId($entity->getId());
+        $position->setQuantity(1);
+        $position->setEntity($entity);
+        
+        $basket = $this->getBasket();
+        $basket->addPosition($position);
+        
+        $this->setMessage('Der Artikel wurde in den Warenkorb gelegt!');
+        
+        return $this;
+    }
+    
+    public function remove($entity)
+    {
+        $position = new PositionEntity();
+        $position->setId($entity->getId());
+        $position->setQuantity(0);
+        $position->setEntity($entity);
+        
+        $basket = $this->getBasket();
+        $basket->removePosition($position);
+        
+        $this->setMessage('Der Artikel wurde aus dem Warenkorb entfernt!');
+        
+        return $this;
+    }
+}
+</pre>

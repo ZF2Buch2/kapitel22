@@ -1,0 +1,68 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Shop
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Shop\Entity\OrderEntity;
+
+/**
+ * Order update view script
+ * 
+ * @package    Shop
+ */
+
+$this->headTitle('Bestellung bearbeiten');
+$this->pageTitle('Eine Bestellung bearbeiten');
+
+$this->headScript()->appendFile(
+    $this->basePath() . '/js/ckeditor/ckeditor.js', 'text/javascript'
+);
+
+// set order entity
+$order = $this->order; /* @var $order OrderEntity */
+?>
+<table class="table table-data">
+<tbody>
+<tr>
+<th>ID</th>
+<td><?php echo $order->getId(); ?></td>
+</tr>
+<tr>
+<th>Bestellzeitpunkt</th>
+<td><?php echo $this->date($order->getCdate()); ?></td>
+</tr>
+<tr>
+<th>E-Mail-Adresse</th>
+<td><?php echo $order->getIdentity()->getEmail(); ?></td>
+</tr>
+<tr>
+<th>Name</th>
+<td>
+<?php echo $order->getIdentity()->getFirstname(); ?> 
+<?php echo $order->getIdentity()->getLastname(); ?>
+</td>
+</tr>
+<tr>
+<th>Bestellhinweise</th>
+<td><?php echo $order->getComments(); ?></td>
+</tr>
+</tbody>
+</table>
+<?php 
+$actionUrl = $this->url('shop/order/action', array(), array(), true);
+echo $this->showForm($this->form, $actionUrl, 'form-horizontal');
+?>
+<h3>Die Bestellung</h3>
+<?php echo $this->shopShowBasket('full', $order->getPositions()); ?>

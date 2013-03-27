@@ -1,0 +1,54 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.17 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.17');
+$this->pageTitle('Listing 22.17');
+?>
+<h3>Neue <code>basketAction()</code> Aktionsmethode im <code>PizzaController</code></h3>
+<pre>
+&lt;?php
+namespace Pizza\Controller;
+
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\AbstractActionController;
+use Pizza\Service\PizzaServiceInterface;
+
+class PizzaController extends AbstractActionController
+{
+    [...]
+    
+    public function basketAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        
+        $pizzaData = $this->getPizzaService()->fetchSingleById($id);
+        
+        if (!$pizzaData) {
+            return $this->redirect()->toRoute('pizza');
+        }
+        
+        $this->shopBasket()->add($pizzaData);
+        
+        return $this->redirect()->toRoute(
+            'pizza/url', array('url' => $pizzaData->getUrl())
+        );
+    }
+}
+</pre>

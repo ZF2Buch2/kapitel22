@@ -1,0 +1,67 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Pizza
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Pizza\Entity\PizzaEntity;
+
+/**
+ * Pizza index view script
+ * 
+ * @package    Pizza
+ */
+
+$this->headTitle('Luigis Pizza-Angebot');
+$this->pageTitle('Luigis Pizza-Angebot');
+?>
+<?php foreach ($this->pizzaList as $pizza) : /* @var $pizza PizzaEntity */ ?>
+<?php
+$urlShow   = $this->url('pizza/url', array('url' => $pizza->getUrl()));
+$urlEdit   = $this->url(
+    'pizza-admin/action', array('action' => 'update', 'id' => $pizza->getId())
+);
+$urlDelete = $this->url(
+    'pizza-admin/action', array('action' => 'delete', 'id' => $pizza->getId())
+);
+?>
+<?php echo $this->pizzaShowPicture($pizza, 'pull-right'); ?>
+<h3><a href="<?php echo $urlShow; ?>"><?php echo $pizza->getName(); ?></a></h3>
+<div class="clearfix">
+<?php echo $pizza->getDescription(); ?>
+<?php if ($this->getHelperPluginManager()->has('commentShowLinks')) : ?>
+<?php echo $this->commentShowLinks($urlShow); ?>
+<?php endif; ?>
+<p>
+<a href="<?php echo $urlShow; ?>" class="btn">Pizza anzeigen</a>
+<?php if ($this->userIsAllowed('blog-admin')): ?>
+<a href="<?php echo $urlEdit; ?>" class="btn">Pizza bearbeiten</a>
+<a href="<?php echo $urlDelete; ?>" class="btn">Pizza löschen</a>
+<?php endif; ?>
+</p>
+</div>
+<hr />
+<?php endforeach; ?>
+<?php
+echo $this->paginationControl(
+    $this->pizzaList, 'Sliding', 'pagination/sliding', 
+    array('route' => 'pizza/page')
+);
+?>
+<?php if ($this->userIsAllowed('pizza-admin')): ?>
+<p class="pull-center">
+<?php $url = $this->url('pizza-admin'); ?>
+<a href="<?php echo $url; ?>" class="btn">Pizzabeiträge verwalten</a>
+</p>
+<?php endif; ?>

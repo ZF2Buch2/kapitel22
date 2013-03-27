@@ -1,0 +1,32 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Team view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Ihr Team');
+$this->pageTitle('Ihr Team ist immer für Sie da');
+
+$url = $this->url('application/action', array(), array(), true);
+?>
+<?php if ($this->getHelperPluginManager()->has('commentShowLinks')) : ?>
+<?php echo $this->commentShowLinks($url); ?>
+<?php endif; ?>
+<?php echo $this->cmsContentBlock('application_about_team', $url); ?>
+<?php if ($this->getHelperPluginManager()->has('commentShowComments')) : ?>
+<?php echo $this->commentShowComments($url); ?>
+<?php endif; ?>

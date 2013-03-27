@@ -1,0 +1,33 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Sidebar view script
+ * 
+ * @package    Application
+ */
+
+$url = $this->url(null, array(), true);
+
+if ($this->getHelperPluginManager()->has('userShowWidget')) {
+    echo $this->userShowWidget();
+}
+
+if ($this->getHelperPluginManager()->has('shopShowBasket')) {
+    echo $this->shopShowBasket();
+}
+?>
+<div class="well">
+<?php echo $this->cmsContentBlock('application_sidebar_box1', $url); ?>
+</div>

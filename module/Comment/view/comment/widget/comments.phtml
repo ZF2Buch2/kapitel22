@@ -1,0 +1,69 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Comment
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Comment\Entity\CommentEntity;
+use Zend\View\Helper\Gravatar;
+
+/**
+ * Comment show comments list and form view script
+ * 
+ * @package    Comment
+ */
+
+$this->headScript()->appendFile(
+    $this->basePath() . '/js/ckeditor/ckeditor.js', 'text/javascript'
+);
+?>
+<hr />
+<div id="comments">
+<h3>Kommentare</h3>
+<?php if ($this->commentList->count() > 0) :?>
+<?php foreach($this->commentList as $comment) :  /* @var $comment CommentEntity */ ?>
+<hr />
+<div class="pull-left">
+<?php 
+    echo $this->gravatar(
+        $comment->getEmail(), 
+        array('imgSize' => 50, 'defaultImg' => Gravatar::DEFAULT_IDENTICON), 
+        array('class' => 'gravatar', 'title' => $comment->getName())
+    );
+?>
+</div>
+<blockquote id="comment-<?php echo $comment->getId(); ?>">
+<?php echo $comment->getMessage();?>
+<small>
+<i class="icon-user"></i> <?php echo $comment->getName();?>
+&nbsp;|&nbsp;
+<i class="icon-calendar"></i> <?php echo $this->date($comment->getCdate()); ?>
+</small>
+</blockquote>
+<?php endforeach; ?>
+<?php else: ?>
+<p>Noch keine Kommentare vorhanden</p>
+<?php endif; ?>
+</div>
+<hr />
+<div id="comment-form">
+<h3>Neuen Kommentar schreiben</h3>
+<p>Nur der <strong>Name</strong> wird beim Kommentar ausgegeben. 
+Die <strong>E-Mail-Adresse</strong> wird nicht ausgegeben.</p>
+<br />
+<?php 
+$actionUrl = $this->url('comment/action', array('action' => 'add'));
+echo $this->showForm($this->commentForm, $actionUrl, 'form-horizontal');
+?>
+</div>

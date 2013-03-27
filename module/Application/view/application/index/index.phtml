@@ -1,0 +1,36 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Index view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Herzlich Willkommen');
+$this->pageTitle('Herzlich Willkommen bei');
+
+$url = $this->url('home');
+?>
+<img src="/img/luigis-pizza-logo.gif" alt="Luigis Pizza-Service" /><br />
+<br />
+<?php if ($this->getHelperPluginManager()->has('pizzaShowCarousel')) : ?>
+<?php echo $this->pizzaShowCarousel(); ?>
+<?php else : ?>
+<img src="/img/pizza/lecker.jpg" /><br /> 
+<em>Foto von <a href="http://pdphoto.org/PictureDetail.php?mat=&pg=6660" target="_blank">pdphoto.org</a></em>
+<?php endif; ?>
+<?php 
+echo $this->cmsContentBlock('application_index_index', $url);
+?>

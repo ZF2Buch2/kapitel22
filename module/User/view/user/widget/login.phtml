@@ -1,0 +1,27 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    User
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * User login widget view script
+ * 
+ * @package    User
+ */
+
+// prepare form
+$actionUrl = $this->url('user/action', array('action' => 'login'));
+?>
+<div class="well">
+<h4>Sie sind nicht angemeldet</h4>
+<?php echo $this->showForm($this->form, $actionUrl, 'form-vertical'); ?>
+</div>

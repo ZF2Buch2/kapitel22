@@ -1,0 +1,44 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * pagination sliding control
+ * 
+ * @package    Application
+ */
+?>
+<div class="pagination pagination-centered">
+<ul>
+<?php if (isset($this->previous)): ?>
+<?php $url = $this->url($this->route, array('page' => $this->previous)); ?>
+<li><a href="<?php echo $url; ?>">&laquo;</a></li>
+<?php else: ?>
+<li class="disabled"><a>&laquo;</a></li>
+<?php endif; ?>
+<?php foreach ($this->pagesInRange as $page) :?>
+<?php if ($page != $this->current): ?>
+<?php $url = $this->url($this->route, array('page' => $page)); ?>
+<li><a href="<?php echo $url; ?>"><?php echo $page; ?></a></li>
+<?php else: ?>
+<li class="active"><a><?php echo $page; ?></a></li>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php if (isset($this->next)): ?>
+<?php $url = $this->url($this->route, array('page' => $this->next)); ?>
+<li><a href="<?php echo $url; ?>">&raquo;</a></li>
+<?php else: ?>
+<li class="disabled"><a>&raquo;</a></li>
+<?php endif; ?>
+</ul>
+</div>

@@ -1,0 +1,53 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Pizza
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Pizza\Entity\PizzaEntity;
+
+/**
+ * Pizza-Admin update view script
+ * 
+ * @package    Pizza
+ */
+
+$this->headTitle('Pizza bearbeiten');
+$this->pageTitle('Eine bestehende Pizza bearbeiten');
+
+$this->headScript()->appendFile(
+    $this->basePath() . '/js/ckeditor/ckeditor.js', 'text/javascript'
+);
+
+// set pizza entity
+$pizza = $this->pizza; /* @var $pizza PizzaEntity */
+
+// set show url
+$urlShow = $this->url('pizza/url', array('url' => $pizza->getUrl()));
+?>
+<table class="table table-data">
+<tbody>
+<tr>
+<th>Url:</th>
+<td><a href="<?php echo $urlShow; ?>"><?php echo $urlShow; ?></a></td>
+</tr>
+<tr>
+<th>Bild:</th>
+<td><?php echo $this->pizzaShowPicture($this->pizza); ?></td>
+</tr>
+</tbody>
+</table>
+<?php 
+$actionUrl = $this->url('pizza-admin/action', array(), array(), true);
+echo $this->showForm($this->form, $actionUrl, 'form-horizontal');

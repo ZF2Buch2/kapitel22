@@ -1,0 +1,62 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Layout view script
+ * 
+ * @package    Application
+ */
+
+// set header
+$this->headTitle('Luigis Pizza-Service')->setSeparator(' - ')->setAutoEscape(false);
+$this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+$this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'));
+$this->headLink()->prependStylesheet($this->basePath() . '/css/styles.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/css/font-awesome.min.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/css/bootstrap.min.css');
+$this->headLink()->appendAlternate($this->basePath() . '/blog/rss', 'application/atom+xml', 'RSS Feed');
+$this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',));
+?>
+<?php echo $this->doctype(); ?>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<?php echo $this->headTitle(); ?>
+<?php echo $this->headMeta(); ?>
+<?php echo $this->headLink(); ?>
+<?php echo $this->headScript(); ?>
+<?php echo $this->headStyle(); ?>
+</head>
+<body>
+<?php echo $this->header; ?>
+<div class="container">
+<div class="row">
+<div class="span9 content">
+<div class="well">
+<?php echo $this->pageTitle(); ?>
+<?php echo $this->showMessages(); ?>
+<?php echo $this->content; ?>
+</div>
+</div>
+<div class="span3 sidebar">
+<?php echo $this->sidebar; ?>
+</div>
+</div>
+</div>
+<?php echo $this->footer; ?>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<?php echo $this->inlineScript() ?>
+</body>
+</html>

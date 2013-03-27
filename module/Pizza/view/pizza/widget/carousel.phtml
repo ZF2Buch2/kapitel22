@@ -1,0 +1,48 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Pizza
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Pizza\Entity\PizzaEntity;
+
+/**
+ * Pizza show carousel view script
+ * 
+ * @package    Pizza
+ */
+
+$this->inlineScript()->appendScript("$('.carousel').carousel('cycle');\n");
+?>
+<div id="pc" class="carousel slide">
+<div class="carousel-inner">
+<?php foreach ($this->pizzaList as $key => $pizza) : /* @var $pizza PizzaEntity */ ?>
+<?php $url = $this->url('pizza/url', array('url' => $pizza->getUrl())); ?>
+<div class="item <?php echo ($key == 0) ? 'active' : ''; ?>">
+<div class="carousel-pizza">
+<?php echo $this->pizzaShowPicture($pizza, 'pull-right'); ?>
+<h3><a href="<?php echo $url; ?>"><?php echo $pizza->getName(); ?></a></h3>
+<div class="clearfix">
+<?php echo $pizza->getDescription(); ?>
+<p>
+<a href="<?php echo $url; ?>" class="btn">Pizza anzeigen</a>
+</p>
+</div>
+</div>
+</div>
+<?php endforeach; ?>
+</div>
+<a class="carousel-control left" href="#pc" data-slide="prev">&lsaquo;</a>
+<a class="carousel-control right" href="#pc" data-slide="next">&rsaquo;</a>
+</div>

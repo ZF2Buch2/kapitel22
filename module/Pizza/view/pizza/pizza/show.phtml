@@ -1,0 +1,64 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Pizza
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Pizza\Entity\PizzaEntity;
+
+/**
+ * Pizza show view script
+ * 
+ * @package    Pizza
+ */
+
+$pizza = $this->pizzaData;  /* @var $pizza PizzaEntity */
+
+$this->headTitle($pizza->getName());
+$this->pageTitle($pizza->getName());
+
+$urlComment = $this->url('pizza/url', array(), array(), true);
+?>
+<?php echo $this->pizzaShowPicture($pizza, 'pull-right'); ?>
+<div class="clearfix">
+<?php echo $pizza->getDescription(); ?>
+<?php if ($this->getHelperPluginManager()->has('commentShowLinks')) : ?>
+<?php echo $this->commentShowLinks($urlComment); ?>
+<?php endif; ?>
+</div>
+<hr />
+<table class="table table-data">
+<tbody>
+<tr>
+<th>Preis</th>
+<td><?php echo $this->currencyFormat($pizza->getPrice()); ?></td>
+</tr>
+<tr>
+<th>Pizzaboden</th>
+<td><?php echo $pizza->getCrustEntity()->getName(); ?></td>
+</tr>
+<tr>
+<th>Beläge</th>
+<td><?php echo $this->pizzaShowToppings($pizza); ?>
+</td>
+</tr>
+<tr>
+<th>&nbsp;</th>
+<td><a href="<?php echo $this->url('pizza'); ?>" class="btn">Zurück</a></td>
+</tr>
+</tbody>
+</table>
+<?php if ($this->getHelperPluginManager()->has('commentShowComments')) : ?>
+<?php echo $this->commentShowComments($urlComment); ?>
+<?php endif; ?>

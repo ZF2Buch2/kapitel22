@@ -1,0 +1,40 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Shop
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Shop\Entity\BasketEntity;
+
+/**
+ * Shop show small basket view script
+ * 
+ * @package    Shop
+ */
+
+$basket = $this->basket; /* @var $basket BasketEntity */
+?>
+<div class="well">
+<h4>Warenkorb</h4>
+<?php if ($basket->isEmpty()) : ?>
+<p>Ihr Warenkorb ist leer.</p>
+<?php else : ?>
+<p>
+Sie haben <?php echo $basket->getCount() ?> Artikel für 
+<?php echo $this->currencyFormat($basket->getTotal()); ?> im Warenkorb.
+</p>
+<?php $basketUrl = $this->url('shop/basket'); ?>
+<p><a href="<?php echo $basketUrl; ?>" class="btn">Warenkorb anzeigen</a></p>
+<?php endif; ?>
+</div>

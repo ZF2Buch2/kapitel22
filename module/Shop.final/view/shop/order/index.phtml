@@ -1,0 +1,73 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Shop
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Shop\Entity\OrderEntity;
+
+/**
+ * Order index view script
+ *
+ * @package    Shop
+ */
+
+$this->headTitle('Bestellungen verwalten');
+$this->pageTitle('Bestellungen verwalten');
+?>
+<table class="table table-striped table-bordered table-hover table-condensed">
+<thead>
+<tr>
+<th>ID</th>
+<th>Datum</th>
+<th>Status</th>
+<th>Name</th>
+<th class="right">Betrag</th>
+<th width="90">Optionen</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($this->orderList as $order) : ?>
+<?php $order = $this->shopGetOrder($order->id); /* @var $order OrderEntity */ ?>
+<?php
+$urlEdit = $this->url(
+    'shop/order/action', array('action' => 'update', 'id' => $order->getId())
+);
+$urlDelete = $this->url(
+    'shop/order/action', array('action' => 'delete', 'id' => $order->getId())
+);
+?>
+<tr>
+<td><?php echo $order->getId(); ?></td>
+<td><?php echo $this->date($order->getCdate()); ?></td>
+<td><?php echo $order->getStatusName(); ?></td>
+<td>
+<?php echo $order->getIdentity()->getLastname(); ?>,
+<?php echo $order->getIdentity()->getFirstname(); ?>
+</td>
+<td class="right"><?php echo $this->currencyFormat($order->getPositions()->getTotal()); ?></td>
+<td>
+<a href="<?php echo $urlEdit; ?>" class="btn"><i class="icon-pencil"></i></a>
+<a href="<?php echo $urlDelete; ?>" class="btn"><i class="icon-trash"></i></a>
+</td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php
+echo $this->paginationControl(
+    $this->orderList, 'Sliding', 'pagination/sliding', 
+    array('route' => 'shop/order/page')
+);
+?>

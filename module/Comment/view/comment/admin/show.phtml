@@ -1,0 +1,115 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Comment
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Comment\Entity\CommentEntity;
+
+/**
+ * Comment-Admin show view script
+ * 
+ * @package    Comment
+ */
+
+$this->headTitle('Kommentar anzeigen');
+$this->pageTitle('Einen Kommentar anzeigen');
+
+// set comment entity
+$comment = $this->comment; /* @var $comment CommentEntity */
+
+// get id
+$id = $comment->getId();
+
+// set show url
+$urlComment = $comment->getUrl();
+?>
+<table class="table table-data">
+<tbody>
+<tr>
+<th>Datum</th>
+<td><?php echo $this->date($comment->getCdate()); ?></td>
+</tr>
+<tr>
+<th>Url</th>
+<td><a href="<?php echo $urlComment; ?>"><?php echo $urlComment; ?></a></td>
+</tr>
+<tr>
+<th>Status</th>
+<td><?php echo $comment->getStatusName(); ?></td>
+</tr>
+<tr>
+<th>E-Mail-Adresse</th>
+<td><?php echo $comment->getEmail(); ?></td>
+</tr>
+<tr>
+<th>Name</th>
+<td><?php echo $comment->getName(); ?></td>
+</tr>
+<tr>
+<th>Spamklassifizierung</th>
+<td><?php echo $this->spamCheck()->classify($comment->getFulltext()); ?></td>
+</tr>
+<tr>
+<th>Kommentar</th>
+<td><?php echo $comment->getMessage(); ?></td>
+</tr>
+</tbody>
+</table>
+<div class="form-horizontal">
+<div class="form-actions">
+<?php if ($comment->getStatus() == 'new') : ?>
+<?php 
+$urlSpam = $this->url(
+    'comment-admin/action', array('action' => 'spam', 'id' => $id)
+);
+$urlHam  = $this->url(
+    'comment-admin/action', array('action' => 'ham', 'id' => $id)
+);
+?>
+<a href="<?php echo $urlSpam; ?>" class="btn">
+<i class="icon-thumbs-down"></i> Spam</a>
+<a href="<?php echo $urlHam; ?>" class="btn">
+<i class="icon-thumbs-up"></i> Ham</a>
+<?php elseif ($comment->getStatus() == 'approved'): ?>
+<?php 
+$urlNoHam  = $this->url(
+    'comment-admin/action', array('action' => 'no-ham', 'id' => $id)
+);
+?>
+<a href="<?php echo $urlNoHam; ?>" class="btn">
+<i class="icon-thumbs-down"></i> Kein Ham</a>
+<?php else: ?>
+<?php 
+$urlNoSpam  = $this->url(
+    'comment-admin/action', array('action' => 'no-spam', 'id' => $id)
+);
+?>
+<a href="<?php echo $urlNoSpam; ?>" class="btn">
+<i class="icon-thumbs-up"></i> Kein Spam</a>
+<?php endif; ?>
+<?php 
+$urlCancel  = $this->url('comment-admin');
+$urlEdit    = $this->url(
+    'comment-admin/action', array('action' => 'update', 'id' => $id)
+);
+$urlDelete  = $this->url(
+    'comment-admin/action', array('action' => 'delete', 'id' => $id)
+);
+?>
+<a href="<?php echo $urlEdit; ?>" class="btn"><i class="icon-pencil"></i> Bearbeiten</a>
+<a href="<?php echo $urlDelete; ?>" class="btn"><i class="icon-trash"></i> Löschen</a>
+<a href="<?php echo $urlCancel; ?>" class="btn"><i class="icon-ban-circle"></i> Abbrechen</a>
+</div>
+</div>

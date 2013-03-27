@@ -1,0 +1,67 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.8 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.8');
+$this->pageTitle('Listing 22.8');
+?>
+<h3>Controller-Plugin <code>Basket</code> ermöglicht Zugriff auf <code>BasketService</code></h3>
+<pre>
+&lt;?php
+namespace Shop\Controller\Plugin;
+
+use Shop\Service\BasketServiceInterface;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+
+class Basket extends AbstractPlugin
+{
+    protected $basketService;
+
+    public function __construct(BasketServiceInterface $basketService)
+    {
+        $this->setBasketService($basketService);
+    }
+
+    public function setBasketService(BasketServiceInterface $basketService = null)
+    {
+        $this->basketService = $basketService;
+        return $this;
+    }
+    
+    public function getBasketService()
+    {
+        return $this->basketService;
+    }
+    
+    public function __invoke()
+    {
+        return $this;
+    }
+    
+    public function add($position)
+    {
+        return $this->getBasketService()->add($position);
+    }
+    
+    public function remove($key)
+    {
+        return $this->getBasketService()->remove($key);
+    }
+}
+</pre>

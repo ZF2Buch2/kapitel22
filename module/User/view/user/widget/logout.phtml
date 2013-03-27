@@ -1,0 +1,51 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    User
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use User\Entity\UserEntity;
+
+/**
+ * User login widget view script
+ * 
+ * @package    User
+ */
+
+// set user entity
+$user = $this->identity; /* @var $user UserEntity */
+
+// prepare form
+$actionUrl = $this->url('user/action', array('action' => 'logout'));
+?>
+<div class="well">
+<h4>Sie sind angemeldet</h4>
+<table style="width: 100%;" class="table table-data">
+<tbody>
+<tr>
+<th>E-Mail:</th>
+<td><?php echo $user->getEmail(); ?></td>
+</tr>
+<tr>
+<th>Name:</th>
+<td>
+<?php echo $user->getFirstname(); ?> <?php echo $user->getLastname(); ?>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="pull-center">
+<?php echo $this->showForm($this->form, $actionUrl, 'form-vertical'); ?>
+</div>
+</div>

@@ -1,0 +1,68 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Blog
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Blog\Entity\BlogEntity;
+
+/**
+ * Blog index view script
+ * 
+ * @package    Blog
+ */
+
+$this->headTitle('Luigis Pizza-Blog');
+$this->pageTitle('Luigis Pizza-Blog');
+?>
+<?php foreach ($this->blogList as $blog) : /* @var $blog BlogEntity */ ?>
+<?php
+$urlShow   = $this->url('blog/action', array('url' => $blog->getUrl()));
+$urlEdit   = $this->url(
+    'blog-admin/action', array('action' => 'update', 'id' => $blog->getId())
+);
+$urlDelete = $this->url(
+    'blog-admin/action', array('action' => 'delete', 'id' => $blog->getId())
+);
+?>
+<h3><?php echo $blog->getTitle(); ?></h3>
+<div class="clearfix">
+<?php if ($this->getHelperPluginManager()->has('commentShowLinks')) : ?>
+<?php echo $this->commentShowLinks($urlShow); ?>
+<?php endif; ?>
+<?php echo $blog->getTeaser(); ?>
+<p><em>Datum: <?php echo $this->date($blog->getCdate()); ?></em></p>
+<p>
+<a href="<?php echo $urlShow; ?>" class="btn">Weiter lesen</a>
+<?php if ($this->userIsAllowed('blog-admin')): ?>
+<a href="<?php echo $urlEdit; ?>" class="btn">Beitrag bearbeiten</a>
+<a href="<?php echo $urlDelete; ?>" class="btn">Beitrag löschen</a>
+<?php endif; ?>
+</p>
+</div>
+<hr />
+<?php endforeach; ?>
+<?php
+echo $this->paginationControl(
+    $this->blogList, 'Sliding', 'pagination/sliding', 
+    array('route' => 'blog/page')
+);
+?>
+<?php if ($this->userIsAllowed('blog-admin')): ?>
+<p class="pull-center">
+<?php $url = $this->url('blog-admin'); ?>
+<a href="<?php echo $url; ?>" class="btn">Blogbeiträge verwalten</a>
+</p>
+<?php endif; ?>
+

@@ -1,0 +1,58 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.16 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.16');
+$this->pageTitle('Listing 22.16');
+?>
+<h3>View-Skript <code>thanks.phtml</code> zur Darstellung einer Bestellbestätigung</h3>
+<pre>
+&lt;?php
+$this-&gt;headTitle('Vielen Dank');
+$this-&gt;pageTitle('Vielen Dank für Ihre Bestellung');
+
+$order = $this-&gt;order; /* @var $order OrderEntity */
+?&gt;
+&lt;h3&gt;Ihre Bestellung&lt;/h3&gt;
+&lt;?php echo $this-&gt;shopShowBasket('full', $order-&gt;getPositions()); ?&gt;
+&lt;h3&gt;Ihre Daten&lt;/h3&gt;
+&lt;table class="table table-data"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th&gt;E-Mail-Adresse&lt;/th&gt;
+&lt;td&gt;&lt;?php echo $order-&gt;getIdentity()-&gt;getEmail(); ?&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;td&gt;
+&lt;?php echo $order-&gt;getIdentity()-&gt;getFirstname(); ?&gt; 
+&lt;?php echo $order-&gt;getIdentity()-&gt;getLastname(); ?&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th&gt;Ihre Bestellhinweise&lt;/th&gt;
+&lt;td&gt;&lt;?php echo $order-&gt;getComments(); ?&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th&gt;Bestellzeitpunkt&lt;/th&gt;
+&lt;td&gt;&lt;?php echo $this-&gt;date($order-&gt;getCdate()); ?&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</pre>

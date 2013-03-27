@@ -1,0 +1,50 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Shop
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Shop\Entity\BasketEntity;
+use Shop\Entity\PositionEntity;
+
+/**
+ * Shop show basket view script
+ * 
+ * @package    Shop
+ */
+
+$this->headTitle('Warenkorb');
+$this->pageTitle('Ihr Warenkorb');
+
+$basket = $this->basket; /* @var $basket BasketEntity */
+
+echo $this->shopShowBasket('full');
+?>
+<?php if (!$basket->isEmpty()) : ?>
+<?php if ($this->userIsAllowed('order', 'create')): ?>
+<?php $urlOrder = $this->url('shop/order/action', array('action' => 'create')); ?>
+<h4>Sie sind angemeldet und können nun bestellen.</h4> 
+<p>
+<a href="<?php echo $urlOrder; ?>" class="btn">Bestellung ausführen</a>
+</p>
+<?php else: ?>
+<?php $urlLogin    = $this->url('user', array('action' => 'login')); ?>
+<?php $urlRegister = $this->url('user', array('action' => 'register')); ?>
+<h4>Sie sind nicht angemeldet.</h4> 
+<p>
+<a href="<?php echo $urlLogin; ?>" class="btn">Anmelden</a> 
+<a href="<?php echo $urlRegister; ?>" class="btn">Jetzt registrieren</a>
+</p>
+<?php endif; ?>
+<?php endif; ?>

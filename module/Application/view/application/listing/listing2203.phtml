@@ -1,0 +1,107 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * Listing 22.3 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.3');
+$this->pageTitle('Listing 22.3');
+?>
+<h3><code>PositionEntity</code> für die Verarbeitung von Bestellpositionen</h3>
+<pre>
+&lt;?php
+namespace Shop\Entity;
+
+class PositionEntity implements PositionEntityInterface
+{
+    protected $id       = null;
+    protected $quantity = null;
+    protected $entity   = null;
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+    }
+    
+    public function addQuantity($quantity = 1)
+    {
+        $this->quantity += $quantity;
+    }
+    
+    public function subQuantity($quantity)
+    {
+        if ($this->quantity >= $quantity) {
+            $this->quantity -= $quantity;
+        }
+    }
+    
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+    
+    public function getAmount()
+    {
+        return $this->quantity * $this->getEntity()->getPrice();
+    }
+    
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+    
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+    
+    public function exchangeArray(array $array)
+    {
+        foreach ($array as $key => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            $method = 'set' . StaticFilter::execute(
+                $key, 'wordunderscoretocamelcase'
+            );
+            if (!method_exists($this, $method)) {
+                continue;
+            }
+            $this->$method($value);
+        }
+    }
+
+    public function getArrayCopy()
+    {
+        return array(
+            'id'       => $this->getId(),
+            'quantity' => $this->getQuantity(),
+            'entity'   => $this->getEntity(),
+        );
+    }
+}
+</pre>

@@ -1,0 +1,93 @@
+<?php
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
+ * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
+ * ISBN 978-3-8273-2994-3
+ * 
+ * @package    Shop
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ */
+
+/**
+ * namespace definition and usage
+ */
+use Shop\Entity\BasketEntity;
+use Shop\Entity\PositionEntity;
+
+/**
+ * Shop show small basket view script
+ * 
+ * @package    Shop
+ */
+
+$basket = $this->basket; /* @var $basket BasketEntity */
+?>
+<?php if ($basket->isEmpty()) : ?>
+<p>Ihr Warenkorb ist leer.</p>
+<br />
+<?php else : ?>
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Pos.</th>
+<th>Artikel</th>
+<th class="right">Preis</th>
+<th class="right">Menge</th>
+<th class="right">Gesamt</th>
+<?php if ($this->change): ?>
+<th width="130">&nbsp;</th>
+<?php endif; ?>
+</tr>
+</thead>
+<tbody>
+<?php $count = 1; ?>
+<?php foreach ($basket->getPositions() as $position): /* @var $position PositionEntity */?>
+<?php $sum = $position->getQuantity() * $position->getEntity()->getPrice(); ?>
+<tr>
+<td><?php echo $count; ?></td>
+<td><?php echo $position->getEntity()->getName(); ?></td>
+<td class="right">
+<?php echo $this->currencyFormat($position->getEntity()->getPrice()); ?></td>
+<td class="right"><?php echo $position->getQuantity(); ?></td>
+<td class="right"><?php echo $this->currencyFormat($sum); ?></td>
+<?php if ($this->change): ?>
+<?php 
+$id     = $position->getId();
+$urlDel = $this->url('shop/basket', array('action' => 'remove', 'id' => $id));
+$urlAdd = $this->url('shop/basket', array('action' => 'increase', 'id' => $id));
+$urlSub = $this->url('shop/basket', array('action' => 'decrease', 'id' => $id));
+?>
+<td>
+<a href="<?php echo $urlAdd; ?>" class="btn"><i class="icon-plus-sign"></i></a>
+<a href="<?php echo $urlSub; ?>" class="btn"><i class="icon-minus-sign"></i></a>
+<a href="<?php echo $urlDel; ?>" class="btn"><i class="icon-trash"></i></a>
+</td>
+<?php endif; ?>
+</tr>
+<?php $count++; ?>
+<?php endforeach; ?>
+</tbody>
+<tfoot>
+<tr>
+<th class="right" colspan="3">Gesamt</th>
+<th class="right"><?php echo $basket->getCount(); ?></th>
+<th class="right"><?php echo $this->currencyFormat($basket->getTotal()); ?></th>
+<?php if ($this->change): ?>
+<th>&nbsp;</th>
+<?php endif; ?>
+</tr>
+<tr>
+<th class="right" colspan="3">Inkl. <?php echo BasketEntity::VAT * 100; ?>% MwSt.</th>
+<th>&nbsp;</th>
+<th class="right"><?php echo $this->currencyFormat($basket->getVat()); ?></th>
+<?php if ($this->change): ?>
+<th>&nbsp;</th>
+<?php endif; ?>
+</tr>
+</tfoot>
+</table>
+<?php endif; ?>

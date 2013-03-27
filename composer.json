@@ -1,0 +1,13 @@
+{
+    "name": "zf2buch/kapitel22",
+    "description": "Listings für Kapitel 22 vom Zend Framework 2 Buch",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://www.zendframeworkbuch.de/",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.1.*"
+    }
+}
