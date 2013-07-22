@@ -8,6 +8,7 @@
     "homepage": "http://www.zendframeworkbuch.de/",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.1.*"
+        "zendframework/zendframework": "2.2.*",
+        "zendframework/zend-developer-tools": "dev-master"
     }
 }

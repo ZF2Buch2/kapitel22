@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,74 +21,22 @@
 $this->headTitle('Listing 22.11');
 $this->pageTitle('Listing 22.11');
 ?>
-<h3>View-Skript <code>full-basket.phtml</code> gibt vollständigen Warenkorb aus</h3>
+<h3>View-Skript <code>small-basket.phtml</code> gibt gekürzten Warenkorb aus</h3>
 <pre>
 &lt;?php
 $basket = $this-&gt;basket;
 ?&gt;
+&lt;div class="well"&gt;
+&lt;h4&gt;Warenkorb&lt;/h4&gt;
 &lt;?php if ($basket-&gt;isEmpty()) : ?&gt;
 &lt;p&gt;Ihr Warenkorb ist leer.&lt;/p&gt;
-&lt;br /&gt;
 &lt;?php else : ?&gt;
-&lt;table class="table table-bordered"&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Pos.&lt;/th&gt;
-&lt;th&gt;Artikel&lt;/th&gt;
-&lt;th class="right"&gt;Preis&lt;/th&gt;
-&lt;th class="right"&gt;Menge&lt;/th&gt;
-&lt;th class="right"&gt;Gesamt&lt;/th&gt;
-&lt;?php if ($this-&gt;change): ?&gt;
-&lt;th width="130"&gt;&amp;nbsp;&lt;/th&gt;
+&lt;p&gt;
+Sie haben &lt;?php echo $basket-&gt;getCount() ?&gt; Artikel für 
+&lt;?php echo $this-&gt;currencyFormat($basket-&gt;getTotal()); ?&gt; im Warenkorb.
+&lt;/p&gt;
+&lt;?php $basketUrl = $this-&gt;url('shop/basket'); ?&gt;
+&lt;p&gt;&lt;a href="&lt;?php echo $basketUrl; ?&gt;" class="btn"&gt;Warenkorb anzeigen&lt;/a&gt;&lt;/p&gt;
 &lt;?php endif; ?&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;?php $count = 1; ?&gt;
-&lt;?php foreach ($basket-&gt;getPositions() as $position): ?&gt;
-&lt;?php $sum = $position-&gt;getQuantity() * $position-&gt;getEntity()-&gt;getPrice(); ?&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;?php echo $count; ?&gt;&lt;/td&gt;
-&lt;td&gt;&lt;?php echo $position-&gt;getEntity()-&gt;getName(); ?&gt;&lt;/td&gt;
-&lt;td class="right"&gt;
-&lt;?php echo $this-&gt;currencyFormat($position-&gt;getEntity()-&gt;getPrice()); ?&gt;&lt;/td&gt;
-&lt;td class="right"&gt;&lt;?php echo $position-&gt;getQuantity(); ?&gt;&lt;/td&gt;
-&lt;td class="right"&gt;&lt;?php echo $this-&gt;currencyFormat($sum); ?&gt;&lt;/td&gt;
-&lt;?php if ($this-&gt;change): ?&gt;
-&lt;?php 
-$id     = $position-&gt;getId();
-$urlDel = $this-&gt;url('shop/basket', array('action' =&gt; 'remove', 'id' =&gt; $id));
-$urlAdd = $this-&gt;url('shop/basket', array('action' =&gt; 'increase', 'id' =&gt; $id));
-$urlSub = $this-&gt;url('shop/basket', array('action' =&gt; 'decrease', 'id' =&gt; $id));
-?&gt;
-&lt;td&gt;
-&lt;a href="&lt;?php echo $urlAdd; ?&gt;" class="btn"&gt;&lt;i class="icon-plus-sign"&gt;&lt;/i&gt;&lt;/a&gt;
-&lt;a href="&lt;?php echo $urlSub; ?&gt;" class="btn"&gt;&lt;i class="icon-minus-sign"&gt;&lt;/i&gt;&lt;/a&gt;
-&lt;a href="&lt;?php echo $urlDel; ?&gt;" class="btn"&gt;&lt;i class="icon-trash"&gt;&lt;/i&gt;&lt;/a&gt;
-&lt;/td&gt;
-&lt;?php endif; ?&gt;
-&lt;/tr&gt;
-&lt;?php $count++; ?&gt;
-&lt;?php endforeach; ?&gt;
-&lt;/tbody&gt;
-&lt;tfoot&gt;
-&lt;tr&gt;
-&lt;th class="right" colspan="3"&gt;Gesamt&lt;/th&gt;
-&lt;th class="right"&gt;&lt;?php echo $basket-&gt;getCount(); ?&gt;&lt;/th&gt;
-&lt;th class="right"&gt;&lt;?php echo $this-&gt;currencyFormat($basket-&gt;getTotal()); ?&gt;&lt;/th&gt;
-&lt;?php if ($this-&gt;change): ?&gt;
-&lt;th&gt;&amp;nbsp;&lt;/th&gt;
-&lt;?php endif; ?&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;th class="right" colspan="3"&gt;Inkl. &lt;?php echo BasketEntity::VAT * 100; ?&gt;% MwSt.&lt;/th&gt;
-&lt;th&gt;&amp;nbsp;&lt;/th&gt;
-&lt;th class="right"&gt;&lt;?php echo $this-&gt;currencyFormat($basket-&gt;getVat()); ?&gt;&lt;/th&gt;
-&lt;?php if ($this-&gt;change): ?&gt;
-&lt;th&gt;&amp;nbsp;&lt;/th&gt;
-&lt;?php endif; ?&gt;
-&lt;/tr&gt;
-&lt;/tfoot&gt;
-&lt;/table&gt;
-&lt;?php endif; ?&gt;
+&lt;/div&gt;
 </pre>

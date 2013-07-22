@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,47 +21,94 @@
 $this->headTitle('Listing 22.8');
 $this->pageTitle('Listing 22.8');
 ?>
-<h3>Controller-Plugin <code>Basket</code> ermöglicht Zugriff auf <code>BasketService</code></h3>
+<h3><code>BasketService</code> stellt Zugriff auf Warenkorb bereit</h3>
 <pre>
 &lt;?php
-namespace Shop\Controller\Plugin;
+namespace Shop\Service;
 
-use Shop\Service\BasketServiceInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Shop\Entity\BasketEntityInterface;
+use Shop\Entity\BasketEntity;
+use Shop\Entity\PositionEntity;
+use Zend\Session\Container;
 
-class Basket extends AbstractPlugin
+class BasketService implements BasketServiceInterface
 {
-    protected $basketService;
-
-    public function __construct(BasketServiceInterface $basketService)
+    const NAMESPACE_DEFAULT = 'Basket_Session';
+    
+    protected $session = null;
+    protected $message = null;
+    
+    public function __construct()
     {
-        $this->setBasketService($basketService);
+        $this->session = new Container(self::NAMESPACE_DEFAULT);
+    }
+    
+    public function initBasket()
+    {
+        $this->setBasket(new BasketEntity());
+
+        return $this;
     }
 
-    public function setBasketService(BasketServiceInterface $basketService = null)
+    public function getBasket()
     {
-        $this->basketService = $basketService;
+        if (!$this->session->basket) {
+            $this->initBasket();
+        }
+        
+        return $this->session->basket;
+    }
+
+    public function setBasket(BasketEntityInterface $basket)
+    {
+        $this->session->basket = $basket;
+        
+        return $this;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+    
+    public function clearMessage()
+    {
+        $this->message = null;
+    }
+    
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+    
+    public function add($entity)
+    {
+        $position = new PositionEntity();
+        $position->setId($entity->getId());
+        $position->setQuantity(1);
+        $position->setEntity($entity);
+        
+        $basket = $this->getBasket();
+        $basket->addPosition($position);
+        
+        $this->setMessage('Der Artikel wurde in den Warenkorb gelegt!');
+        
         return $this;
     }
     
-    public function getBasketService()
+    public function remove($entity)
     {
-        return $this->basketService;
-    }
-    
-    public function __invoke()
-    {
+        $position = new PositionEntity();
+        $position->setId($entity->getId());
+        $position->setQuantity(0);
+        $position->setEntity($entity);
+        
+        $basket = $this->getBasket();
+        $basket->removePosition($position);
+        
+        $this->setMessage('Der Artikel wurde aus dem Warenkorb entfernt!');
+        
         return $this;
-    }
-    
-    public function add($position)
-    {
-        return $this->getBasketService()->add($position);
-    }
-    
-    public function remove($key)
-    {
-        return $this->getBasketService()->remove($key);
     }
 }
 </pre>

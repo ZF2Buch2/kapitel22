@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    User
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -67,7 +67,7 @@ class UserController extends AbstractActionController
         if (!$this->getUserService()->getAuthentication()->hasIdentity()) {
             // Redirect to login user
             return $this->redirect()->toRoute(
-                'user/action', array('action' => 'login')
+                'user', array('action' => 'login')
             );
         }
         
@@ -91,7 +91,7 @@ class UserController extends AbstractActionController
         
         // prepare Post/Redirect/Get Plugin
         $prg = $this->prg(
-            $this->url()->fromRoute('user/action', array('action' => 'login')), 
+            $this->url()->fromRoute('user', array('action' => 'login')), 
             true
         );
     
@@ -165,7 +165,7 @@ class UserController extends AbstractActionController
         
         // prepare Post/Redirect/Get Plugin
         $prg = $this->prg(
-            $this->url()->fromRoute('user/action', array('action' => 'register')), 
+            $this->url()->fromRoute('user', array('action' => 'register')), 
             true
         );
 
@@ -193,7 +193,7 @@ class UserController extends AbstractActionController
                 
                 // Redirect to login page
                 return $this->redirect()->toRoute(
-                    'user/action', array('action' => 'login')
+                    'user', array('action' => 'login')
                 );
             }
         }

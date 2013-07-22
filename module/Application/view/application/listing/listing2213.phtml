@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,81 +21,38 @@
 $this->headTitle('Listing 22.13');
 $this->pageTitle('Listing 22.13');
 ?>
-<h3><code>BasketController</code> zur Bearbeitung eines Warenkorbs</h3>
+<h3>View-Helper <code>GetOrder</code> holt Bestelldaten</h3>
 <pre>
 &lt;?php
-namespace Shop\Controller;
+namespace Shop\View\Helper;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Shop\Service\BasketServiceInterface;
+use Shop\Entity\OrderEntityInterface;
+use Shop\Service\OrderServiceInterface;
+use Zend\View\Helper\AbstractHelper;
 
-class BasketController extends AbstractActionController
+class GetOrder extends AbstractHelper
 {
-    protected $basketService;
-    
-    public function setBasketService(BasketServiceInterface $basketService)
-    {
-        $this->basketService = $basketService;
+    protected $orderService;
 
+    public function __construct(OrderServiceInterface $orderService)
+    {
+        $this->setOrderService($orderService);
+    }
+
+    public function setOrderService(OrderServiceInterface $orderService = null)
+    {
+        $this->orderService = $orderService;
         return $this;
     }
     
-    public function getBasketService()
+    public function getOrderService()
     {
-        return $this->basketService;
+        return $this->orderService;
     }
     
-    public function indexAction()
+    public function __invoke($id)
     {
-        return new ViewModel(array(
-            'basket' => $this->getBasketService()->getBasket(),
-        ));
-    }
-    
-    public function removeAction()
-    {
-        $id = $this->params()->fromRoute('id');
-    
-        $basket = $this->getBasketService()->getBasket();
-        
-        $position = $basket->getPosition($id);
-        
-        if ($position) {
-            $this->getBasketService()->remove($position->getEntity());
-        }
-    
-        return $this->redirect()->toRoute('shop/basket');
-    }
-
-    public function increaseAction()
-    {
-        $id = $this->params()->fromRoute('id');
-    
-        $basket = $this->getBasketService()->getBasket();
-        
-        $position = $basket->getPosition($id);
-        
-        if ($position) {
-            $position->addQuantity(1);
-        }
-    
-        return $this->redirect()->toRoute('shop/basket');
-    }
-
-    public function decreaseAction()
-    {
-        $id = $this->params()->fromRoute('id');
-    
-        $basket = $this->getBasketService()->getBasket();
-    
-        $position = $basket->getPosition($id);
-    
-        if ($position) {
-            $position->subQuantity(1);
-        }
-    
-        return $this->redirect()->toRoute('shop/basket');
+        return $this->getOrderService()->fetchSingleById($id);
     }
 }
 </pre>

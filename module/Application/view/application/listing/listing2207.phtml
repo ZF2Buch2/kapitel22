@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,94 +21,98 @@
 $this->headTitle('Listing 22.7');
 $this->pageTitle('Listing 22.7');
 ?>
-<h3><code>BasketService</code> stellt Zugriff auf Warenkorb bereit</h3>
+<h3>Besonderheiten im <code>OrderService</code></h3>
 <pre>
 &lt;?php
 namespace Shop\Service;
 
-use Shop\Entity\BasketEntityInterface;
-use Shop\Entity\BasketEntity;
-use Shop\Entity\PositionEntity;
-use Zend\Session\Container;
+[...]
 
-class BasketService implements BasketServiceInterface
+class OrderService implements EventManagerAwareInterface
 {
-    const NAMESPACE_DEFAULT = 'Basket_Session';
+    [...]
+        
+    protected $basketService = null;
+    protected $identity = null;
     
-    protected $session = null;
-    protected $message = null;
-    
-    public function __construct()
+    [...]
+        
+    public function __construct(
+        OrderTable $orderTable, BasketServiceInterface $basket, UserEntity $identity = null
+    )
     {
-        $this->session = new Container(self::NAMESPACE_DEFAULT);
+        $this->setTable($orderTable, 'order');
+        $this->setBasketService($basket);
+        $this->setIdentity($identity);
     }
     
-    public function initBasket()
+    [...]
+        
+    public function addIdentity($order)
     {
-        $this->setBasket(new BasketEntity());
-
-        return $this;
-    }
-
-    public function getBasket()
-    {
-        if (!$this->session->basket) {
-            $this->initBasket();
+        if (!$order) {
+            return false;
         }
         
-        return $this->session->basket;
+        $order->setIdentity(
+            $this->getTable('user')->fetchSingleById($order->getUserId())
+        );
+        
+        return $order;
+    }
+    
+    public function fetchSingleById($id)
+    {
+        $order = $this->getTable('order')->fetchSingleById($id);
+        $order = $this->addIdentity($order);
+        return $order;
+    }
+    
+    public function fetchList($page = 1, $perPage = 4, $params = array())
+    {
+        $select = $this->getTable('order')->getSql()->select();
+        $select->columns(array('id'));
+        $select->order('cdate DESC');
+        
+        foreach ($params as $param => $value) {
+            $select->where->equalTo($param, $value);
+        }
+        
+        $adapter = new DbSelect(
+            $select, 
+            $this->getTable('order')->getAdapter()
+        );
+        $paginator = new Paginator($adapter);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage($perPage);
+        $paginator->setPageRange(9);
+        
+        return $paginator;
+    }
+    
+    public function save(array $data, $id = null)
+    {
+        [...]
+        
+        $order->exchangeArray($form->getData());
+        
+        // set values
+        if ($mode == 'create') {
+            $order->setCdate(date('Y-m-d H:i:s'));
+            $order->setStatus('new');
+            $order->setPositions($this->getBasketService()->getBasket());
+            $order->setUserId($this->getIdentity()->getId());
+        }
+        
+        // get hydrator
+        $hydrator = $this->getTable('order')->getResultSetPrototype()->getHydrator();
+        
+        // get insert data
+        $saveData = $hydrator->extract($order);
+        
+        [...]
     }
 
-    public function setBasket(BasketEntityInterface $basket)
-    {
-        $this->session->basket = $basket;
-        
-        return $this;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-    
-    public function clearMessage()
-    {
-        $this->message = null;
-    }
-    
-    public function setMessage($message)
-    {
-        $this->message = $message;
-    }
-    
-    public function add($entity)
-    {
-        $position = new PositionEntity();
-        $position->setId($entity->getId());
-        $position->setQuantity(1);
-        $position->setEntity($entity);
-        
-        $basket = $this->getBasket();
-        $basket->addPosition($position);
-        
-        $this->setMessage('Der Artikel wurde in den Warenkorb gelegt!');
-        
-        return $this;
-    }
-    
-    public function remove($entity)
-    {
-        $position = new PositionEntity();
-        $position->setId($entity->getId());
-        $position->setQuantity(0);
-        $position->setEntity($entity);
-        
-        $basket = $this->getBasket();
-        $basket->removePosition($position);
-        
-        $this->setMessage('Der Artikel wurde aus dem Warenkorb entfernt!');
-        
-        return $this;
-    }
+    [...]
 }
 </pre>

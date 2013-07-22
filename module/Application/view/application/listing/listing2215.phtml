@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,38 +21,31 @@
 $this->headTitle('Listing 22.15');
 $this->pageTitle('Listing 22.15');
 ?>
-<h3>View-Skript <code>create.phtml</code> zum Anlegen einer Bestellung</h3>
+<h3>View-Skript <code>index.phtml</code> zur Darstellung des Warenkorbs</h3>
 <pre>
 &lt;?php
-$this-&gt;headTitle('Bestellung ausführen');
-$this-&gt;pageTitle('Eine Bestellung ausführen');
+$this-&gt;headTitle('Warenkorb');
+$this-&gt;pageTitle('Ihr Warenkorb');
 
-$this-&gt;headScript()-&gt;appendFile(
-    $this-&gt;basePath() . '/js/ckeditor/ckeditor.js', 'text/javascript'
-);
+$basket = $this-&gt;basket; /* @var $basket BasketEntity */
 
-$identity = $this-&gt;identity; /* @var $identity UserEntity */
+echo $this-&gt;shopShowBasket('full');
 ?&gt;
-&lt;h3&gt;Ihr Warenkorb&lt;/h3&gt;
-&lt;?php echo $this-&gt;shopShowBasket('full'); ?&gt;
-&lt;h3&gt;Ihre Bestellung&lt;/h3&gt;
-&lt;table class="table table-data"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;th&gt;E-Mail-Adresse&lt;/th&gt;
-&lt;td&gt;&lt;?php echo $identity-&gt;getEmail(); ?&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;td&gt;
-&lt;?php echo $identity-&gt;getFirstname(); ?&gt; &lt;?php echo $identity-&gt;getLastname(); ?&gt;
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;?php 
-$actionUrl = $this-&gt;url(
-    'shop/order/action', array('action' =&gt; 'create'), array(), true
-);
-echo $this-&gt;showForm($this-&gt;form, $actionUrl, 'form-horizontal');
+&lt;?php if (!$basket-&gt;isEmpty()) : ?&gt;
+&lt;?php if ($this-&gt;userIsAllowed('order', 'create')): ?&gt;
+&lt;?php $urlOrder = $this-&gt;url('shop/order/action', array('action' =&gt; 'create')); ?&gt;
+&lt;h4&gt;Sie sind angemeldet und können nun bestellen.&lt;/h4&gt; 
+&lt;p&gt;
+&lt;a href="&lt;?php echo $urlOrder; ?&gt;" class="btn"&gt;Bestellung ausführen&lt;/a&gt;
+&lt;/p&gt;
+&lt;?php else: ?&gt;
+&lt;?php $urlLogin    = $this-&gt;url('user', array('action' =&gt; 'login')); ?&gt;
+&lt;?php $urlRegister = $this-&gt;url('user', array('action' =&gt; 'register')); ?&gt;
+&lt;h4&gt;Sie sind nicht angemeldet.&lt;/h4&gt; 
+&lt;p&gt;
+&lt;a href="&lt;?php echo $urlLogin; ?&gt;" class="btn"&gt;Anmelden&lt;/a&gt; 
+&lt;a href="&lt;?php echo $urlRegister; ?&gt;" class="btn"&gt;Jetzt registrieren&lt;/a&gt;
+&lt;/p&gt;
+&lt;?php endif; ?&gt;
+&lt;?php endif; ?&gt;
 </pre>

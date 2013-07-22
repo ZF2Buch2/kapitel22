@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,22 +21,56 @@
 $this->headTitle('Listing 22.10');
 $this->pageTitle('Listing 22.10');
 ?>
-<h3>View-Skript <code>small-basket.phtml</code> gibt gekürzten Warenkorb aus</h3>
+<h3>View-Helper <code>ShowBasket</code> ermöglicht Ausgabe des Warenkorbs</h3>
 <pre>
 &lt;?php
-$basket = $this-&gt;basket;
-?&gt;
-&lt;div class="well"&gt;
-&lt;h4&gt;Warenkorb&lt;/h4&gt;
-&lt;?php if ($basket-&gt;isEmpty()) : ?&gt;
-&lt;p&gt;Ihr Warenkorb ist leer.&lt;/p&gt;
-&lt;?php else : ?&gt;
-&lt;p&gt;
-Sie haben &lt;?php echo $basket-&gt;getCount() ?&gt; Artikel für 
-&lt;?php echo $this-&gt;currencyFormat($basket-&gt;getTotal()); ?&gt; im Warenkorb.
-&lt;/p&gt;
-&lt;?php $basketUrl = $this-&gt;url('shop/basket'); ?&gt;
-&lt;p&gt;&lt;a href="&lt;?php echo $basketUrl; ?&gt;" class="btn"&gt;Warenkorb anzeigen&lt;/a&gt;&lt;/p&gt;
-&lt;?php endif; ?&gt;
-&lt;/div&gt;
+namespace Shop\View\Helper;
+
+use Shop\Entity\BasketEntityInterface;
+use Shop\Service\BasketServiceInterface;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Model\ViewModel;
+
+class ShowBasket extends AbstractHelper
+{
+    protected $basketService;
+
+    public function __construct(BasketServiceInterface $basketService)
+    {
+        $this->setBasketService($basketService);
+    }
+
+    public function setBasketService(BasketServiceInterface $basketService = null)
+    {
+        $this->basketService = $basketService;
+        return $this;
+    }
+    
+    public function getBasketService()
+    {
+        return $this->basketService;
+    }
+    
+    public function __invoke($type = 'small', $basket = null)
+    {
+        $template = $type == 'small' 
+                  ? 'widget/small-basket' 
+                  : 'widget/full-basket';
+        
+        if (!$basket instanceof BasketEntityInterface) {
+            $basket = $this->getBasketService()->getBasket();
+            $change = true;
+        } else {
+            $change = false;
+        }
+        
+        $vm = new ViewModel(array(
+            'basket' => $basket,
+            'change' => $change,
+        ));
+        $vm->setTemplate($template);
+        
+        return $this->getView()->render($vm);
+    }
+}
 </pre>

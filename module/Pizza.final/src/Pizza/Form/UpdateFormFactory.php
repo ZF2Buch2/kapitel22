@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Pizza
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -17,7 +17,6 @@
  */
 namespace Pizza\Form;
 
-use Pizza\Filter\PizzaFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -35,6 +34,8 @@ class UpdateFormFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $inputFilterManager = $serviceLocator->get('InputFilterManager');
+        
         $pizzaEntity   = $serviceLocator->get('Pizza\Entity\Pizza');
         $statusOptions = $pizzaEntity->getStatusNames();
         
@@ -56,7 +57,7 @@ class UpdateFormFactory implements FactoryInterface
         $form->addDescriptionElement();
         $form->addSubmitElement('save', 'Speichern');
         $form->addSubmitElement('cancel', 'Abbrechen');
-        $form->setInputFilter(new PizzaFilter());
+        $form->setInputFilter($inputFilterManager->get('Pizza\Filter\Pizza'));
         $form->setValidationGroup(array(
             'id', 'status', 'name', 'description', 'price', 'crust_id', 
             'toppings', 'picture', 'save', 'cancel'

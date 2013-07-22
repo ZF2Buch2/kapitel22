@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -21,17 +21,34 @@
 $this->headTitle('Listing 22.18');
 $this->pageTitle('Listing 22.18');
 ?>
-<h3>Button zum Ablegen in Warenkorb in View-Skript eingebaut</h3>
+<h3>Neue <code>basketAction()</code> Aktionsmethode im <code>PizzaController</code></h3>
 <pre>
-[...]
-&lt;?php if ($this-&gt;getHelperPluginManager()-&gt;has('shopShowBasket')) : ?&gt;
-&lt;?php $urlBasket = $this-&gt;url('pizza/basket', array('id' =&gt; $pizza-&gt;getId()));?&gt;
-&lt;a href="&lt;?php echo $urlBasket; ?&gt;" class="btn"&gt;
-&lt;i class="icon-shopping-cart"&gt;&lt;/i&gt; In den Warenkorb
-&lt;/a&gt;
-&lt;?php endif; ?&gt;
-&lt;a href="&lt;?php echo $this-&gt;url('pizza'); ?&gt;" class="btn"&gt;
-&lt;i class="icon-list"&gt;&lt;/i&gt; Zurück zur Liste
-&lt;/a&gt;
-[...]
+&lt;?php
+namespace Pizza\Controller;
+
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\AbstractActionController;
+use Pizza\Service\PizzaServiceInterface;
+
+class PizzaController extends AbstractActionController
+{
+    [...]
+    
+    public function basketAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        
+        $pizzaData = $this->getPizzaService()->fetchSingleById($id);
+        
+        if (!$pizzaData) {
+            return $this->redirect()->toRoute('pizza');
+        }
+        
+        $this->shopBasket()->add($pizzaData);
+        
+        return $this->redirect()->toRoute(
+            'pizza/url', array('url' => $pizzaData->getUrl())
+        );
+    }
+}
 </pre>

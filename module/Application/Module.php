@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Application
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -26,6 +26,7 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
+use Zend\Validator\StaticValidator;
 
 /**
  * Application module class
@@ -45,8 +46,11 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
+        // get managers
+        $eventManager   = $e->getApplication()->getEventManager();
+        $serviceManager = $e->getApplication()->getServiceManager();
+        
         // attach module listener
-        $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         
@@ -54,21 +58,19 @@ class Module implements
         $eventManager->attachAggregate(new ApplicationListener());
         
         // get config
-        $config = $e->getApplication()->getServiceManager()->get('config');
+        $config = $serviceManager->get('config');
         
         // configure session
         $sessionConfig = new SessionConfig();
         $sessionConfig->setOptions($config['session']);
         
-        // add StringToUrl filter to StaticFilter
-        StaticFilter::getPluginManager()->setInvokableClass(
-            'stringToUrl', 'Application\Filter\StringToUrl'
-        );
-
-        // add StringHtmlPurifier filter to StaticFilter
-        StaticFilter::getPluginManager()->setInvokableClass(
-            'StringHtmlPurifier', 'Application\Filter\StringHtmlPurifier'
-        );
+        // get filter and validator manager 
+        $filterManager    = $serviceManager->get('FilterManager');
+        $validatorManager = $serviceManager->get('ValidatorManager');
+        
+        // add custom filters and validators
+        StaticFilter::setPluginManager($filterManager);
+        StaticValidator::setPluginManager($validatorManager);
     }
 
     /**

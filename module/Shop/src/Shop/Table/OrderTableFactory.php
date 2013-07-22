@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Shop
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -17,7 +17,6 @@
  */
 namespace Shop\Table;
 
-use Shop\Hydrator\OrderHydrator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -37,9 +36,11 @@ class OrderTableFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $hydratorManager = $serviceLocator->get('HydratorManager');
+        
         $adapter  = $serviceLocator->get('Zend\Db\Adapter\Adapter');
         $entity   = $serviceLocator->get('Shop\Entity\Order');
-        $hydrator = new OrderHydrator();
+        $hydrator = $hydratorManager->get('Shop\Hydrator\Order');
         $table    = new OrderTable($adapter, $entity, $hydrator);
         return $table;
     }

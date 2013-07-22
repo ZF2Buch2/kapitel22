@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Shop
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -17,8 +17,6 @@
  */
 namespace Shop\Filter;
 
-use Application\Filter\StringHtmlPurifier;
-use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -31,15 +29,15 @@ class OrderFilter extends InputFilter
     /**
      * Build filter
      */
-    public function __construct()
+    public function init()
     {
-        $filterHtmlPurifier = new StringHtmlPurifier();
-        
-        $comments = new Input('comments');
-        $comments->setRequired(false);
-        $comments->getFilterChain()->attachByName('StringTrim');
-        $comments->getFilterChain()->attach($filterHtmlPurifier);
-        
-        $this->add($comments);
+        $this->add(array(
+            'name'       => 'comments',
+            'required'   => false,
+            'filters'    => array(
+                array('name' => 'StringTrim'),
+                array('name' => 'StringHtmlPurifier'),
+            ),
+        ));
     }
 }

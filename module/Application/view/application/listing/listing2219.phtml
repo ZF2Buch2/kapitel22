@@ -1,0 +1,37 @@
+<?php 
+/**
+ * ZF2 Buch Kapitel 22
+ * 
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
+ * 
+ * @package    Application
+ * @author     Ralf Eggert <r.eggert@travello.de>
+ * @copyright  Alle Listings sind urheberrechtlich geschützt!
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
+ */
+
+/**
+ * Listing 22.19 view script
+ * 
+ * @package    Application
+ */
+
+$this->headTitle('Listing 22.19');
+$this->pageTitle('Listing 22.19');
+?>
+<h3>Button zum Ablegen in Warenkorb in View-Skript eingebaut</h3>
+<pre>
+[...]
+&lt;?php if ($this-&gt;getHelperPluginManager()-&gt;has('shopShowBasket')) : ?&gt;
+&lt;?php $urlBasket = $this-&gt;url('pizza/basket', array('id' =&gt; $pizza-&gt;getId()));?&gt;
+&lt;a href="&lt;?php echo $urlBasket; ?&gt;" class="btn"&gt;
+&lt;i class="icon-shopping-cart"&gt;&lt;/i&gt; In den Warenkorb
+&lt;/a&gt;
+&lt;?php endif; ?&gt;
+&lt;a href="&lt;?php echo $this-&gt;url('pizza'); ?&gt;" class="btn"&gt;
+&lt;i class="icon-list"&gt;&lt;/i&gt; Zurück zur Liste
+&lt;/a&gt;
+[...]
+</pre>

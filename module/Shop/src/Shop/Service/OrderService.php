@@ -2,14 +2,14 @@
 /**
  * ZF2 Buch Kapitel 22
  * 
- * Das Buch "Zend Framework 2 - Von den Grundlagen bis zur fertigen Anwendung"
- * von Ralf Eggert ist im Addison-Wesley Verlag erschienen. 
- * ISBN 978-3-8273-2994-3
+ * Das Buch "Zend Framework 2 - Das Praxisbuch"
+ * von Ralf Eggert ist im Galileo-Computing Verlag erschienen. 
+ * ISBN 978-3-8362-2610-3
  * 
  * @package    Shop
  * @author     Ralf Eggert <r.eggert@travello.de>
  * @copyright  Alle Listings sind urheberrechtlich geschützt!
- * @link       http://www.zendframeworkbuch.de/ und http://www.awl.de/2994
+ * @link       http://www.zendframeworkbuch.de/ und http://www.galileocomputing.de/3460
  */
 
 /**
@@ -26,7 +26,6 @@ use Zend\Paginator\Adapter\DbSelect;
 use Shop\Entity\OrderEntityInterface;
 use Shop\Entity\OrderEntity;
 use Shop\Form\OrderFormInterface;
-use Shop\Hydrator\OrderHydrator;
 use Shop\Table\OrderTableInterface;
 use User\Entity\UserEntityInterface;
 
@@ -339,7 +338,7 @@ class OrderService implements EventManagerAwareInterface, OrderServiceInterface
         }
         
         // get hydrator
-        $hydrator = new OrderHydrator();
+        $hydrator = $this->getTable('order')->getResultSetPrototype()->getHydrator();
         
         // get insert data
         $saveData = $hydrator->extract($order);
