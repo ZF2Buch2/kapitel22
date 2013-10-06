@@ -262,10 +262,10 @@ class AdminController extends AbstractActionController
         
         // get form and bind object
         $form = $this->getPizzaService()->getForm('delete');
-        
+
         //check prg
         if ($prg === false) {
-            $form->bind($pizza);
+            $form->get('id')->setValue($pizza->getId());
         }
         
         // add messages to flash messenger

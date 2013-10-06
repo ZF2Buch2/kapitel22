@@ -265,7 +265,7 @@ class AdminController extends AbstractActionController
         
         //check prg
         if ($prg === false) {
-            $form->bind($pizza);
+            $form->get('id')->setValue($pizza->getId());
         }
         
         // add messages to flash messenger

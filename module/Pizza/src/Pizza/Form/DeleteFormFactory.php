@@ -35,7 +35,7 @@ class DeleteFormFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $inputFilterManager = $serviceLocator->get('InputFilterManager');
-        
+
         $form = new PizzaForm('delete');
         $form->addIdElement();
         $form->addCsrfElement();
